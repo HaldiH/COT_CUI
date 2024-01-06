@@ -1,437 +1,425 @@
 ---
-theme: seriph
+theme: default
 background: https://source.unsplash.com/collection/94734566/1920x1080
 class: text-center
 highlighter: shiki
 lineNumbers: false
 info: |
-  ## Slidev Starter Template
-  Presentation slides for developers.
-
-  Learn more at [Sli.dev](https://sli.dev)
+  # Containerization and Orchestration Technologies
+  A course by [Malik Algelly]() and [Hugo Haldi](https://haldih.github.io/) for the Informatic University Center at the University of Geneva.
 drawings:
   persist: false
 transition: slide-left
-title: Welcome to Slidev
+title: Containerization and Orchestration Technologies
 mdc: true
 ---
 
-# Welcome to Slidev
+# Containerization and Orchestration Technologies
 
-Presentation slides for developers
-
-<div class="pt-12">
-  <span @click="$slidev.nav.next" class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
-    Press Space for next page <carbon:arrow-right class="inline"/>
-  </span>
-</div>
-
-<div class="abs-br m-6 flex gap-2">
-  <button @click="$slidev.nav.openInEditor()" title="Open in Editor" class="text-xl slidev-icon-btn opacity-50 !border-none !hover:text-white">
-    <carbon:edit />
-  </button>
-  <a href="https://github.com/slidevjs/slidev" target="_blank" alt="GitHub" title="Open in GitHub"
-    class="text-xl slidev-icon-btn opacity-50 !border-none !hover:text-white">
-    <carbon-logo-github />
-  </a>
-</div>
-
-<!--
-The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
--->
+A course by [Malik Algelly]() and [Hugo Haldi](https://haldih.github.io/) for the Informatic University Center at the University of Geneva.
 
 ---
-transition: fade-out
----
 
-# What is Slidev?
+## Contents
 
-Slidev is a slides maker and presenter designed for developers, consist of the following features
-
-- 📝 **Text-based** - focus on the content with Markdown, and then style them later
-- 🎨 **Themable** - theme can be shared and used with npm packages
-- 🧑‍💻 **Developer Friendly** - code highlighting, live coding with autocompletion
-- 🤹 **Interactive** - embedding Vue components to enhance your expressions
-- 🎥 **Recording** - built-in recording and camera view
-- 📤 **Portable** - export into PDF, PNGs, or even a hostable SPA
-- 🛠 **Hackable** - anything possible on a webpage
-
-<br>
-<br>
-
-Read more about [Why Slidev?](https://sli.dev/guide/why)
-
-<!--
-You can have `style` tag in markdown to override the style for the current page.
-Learn more: https://sli.dev/guide/syntax#embedded-styles
--->
-
-<style>
-h1 {
-  background-color: #2B90B6;
-  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
-  background-size: 100%;
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -moz-text-fill-color: transparent;
-}
-</style>
-
-<!--
-Here is another comment.
--->
+- [Containerization in depth](#containerization-in-depth)
+- [Docker: Automating the Containerization Process](#docker-automating-the-containerization-process)
+- [Orchestration overview](#orchestration-overview)
+- [Kubernetes: Automating the Orchestration Process](#kubernetes-automating-the-orchestration-process)
+- [Helm Basics](#helm-basics)
 
 ---
-layout: default
+
+## What is Containerization?
+
+### VMs vs Containers
+
+#### Virtual Machines
+
+- Virtual Machines (VMs) are an abstraction of physical hardware turning one computer into many computers
+- VMs involves a [hypervisor](https://www.vmware.com/topics/glossary/content/hypervisor.html.html) and each VM contains a full copy of an operating system, one or more apps, necessary binaries and libraries
+
 ---
 
-# Table of contents
+## What is Containerization?
 
-```html
-<Toc minDepth="1" maxDepth="1"></Toc>
+### VMs vs Containers
+
+#### Containers
+
+- Containers are an abstraction at the app layer that packages code and dependencies together
+- Containerization is a lightweight alternative to full machine virtualization
+- Containers are isolated from one another and bundle their own software, libraries and configuration files
+- They can communicate with each other through well-defined channels
+
+---
+
+## Why Containerization?
+
+- **Portability**: Containers are highly portable
+  - A piece of software that runs on a laptop can run on any other machine that runs Linux
+- **Efficiency**: Containers are lightweight
+  - Contrary to VMs, containers do not require a hypervisor nor a guest OS
+  - Can be efficiently created and destroyed
+- **Isolation**: Containers are isolated from each other
+  - Containers can only access resources that are explicitly allowed
+- **Security**: Containers are secure
+  - Since containers are isolated from each other, a compromised container cannot compromise other containers
+
+---
+
+## Why Containerization? (cont.)
+
+- **Scalability**: Containers are scalable
+  - Containers can be easily scaled horizontally
+  - E.g. if a high load is detected, more containers can be created to handle the load
+- **Productivity**: Containers increase developer productivity
+  - Containers allow developers to focus on writing code rather than setting up the environment
+- **Cost**: Containers reduce costs
+  - Containers allow you to run more workloads on the same hardware
+- **CI/CD**: Containers are a key enabler of CI/CD
+  - Containers allow you to build once and deploy anywhere
+
+---
+
+## How containerization works?
+
+- Containers use a kernel feature called *namespaces* to provide a layer of isolation
+- Containers use a kernel feature called *cgroups* to provide resource isolation
+- Cgroups allow you to limit the amount of resources a process or group of processes can use and freeze processes
+
+---
+
+## Namespaces
+
+> Namespaces are a feature of the Linux kernel that partitions kernel resources such that one set of processes sees one set of resources while another set of processes sees a different set of resources.
+>
+> -- <cite>Wikipedia</cite>
+
+In other words, namespaces allow you to create an isolated environment for a process or a group of processes. The goal is to prevent processes from seeing resources that they are not allowed to see. For example, one can put a process in a namespace where it can only see a specific network interface.
+
+Changes made to a resource in a namespace are only visible to processes in that namespace.
+
+---
+
+## Types of Namespaces
+
+- **UTS**: Hostname and domain name
+- **PID**: Process IDs
+- **Network**: Network devices, stacks, ports, etc.
+- **Mount**: Mount points
+- **User**: User and group IDs
+- ...
+
+---
+
+### UTS Namespace
+
+- UTS stands for Unix Timesharing System
+- UTS namespace allows each container to have its own hostname and domain name
+- Changes made to the hostname in a UTS namespace are only visible to processes in that namespace
+
+- A child process inherits the UTS namespace of its parent process
+- Hostname and domain name are inherited from the parent namespace when a new namespace is created
+
+---
+layout: two-cols-header
+---
+
+#### In practice
+
+::left::
+
+```bash
+# 1. Get the hostname
+$ hostname
+ms-7917
+
+# 4. Check that the hostname
+# has not changed in the initial
+# UTS namespace
+$ hostname
+ms-7917
+
+# 5. Change the hostname in the
+# initial UTS namespace
+$ hostname yggdrasil
 ```
 
-<Toc maxDepth="1"></Toc>
+::right::
 
----
-transition: slide-up
-level: 2
----
+```bash
+# 2. Create a new UTS namespace
+$ unshare -u
+$ hostname
+ms-7917
 
-# Navigation
+# 3. change the hostname in
+# the new UTS namespace
+$ hostname thor
+$ hostname
+thor
 
-Hover on the bottom-left corner to see the navigation's controls panel, [learn more](https://sli.dev/guide/navigation.html)
-
-## Keyboard Shortcuts
-
-|     |     |
-| --- | --- |
-| <kbd>right</kbd> / <kbd>space</kbd>| next animation or slide |
-| <kbd>left</kbd>  / <kbd>shift</kbd><kbd>space</kbd> | previous animation or slide |
-| <kbd>up</kbd> | previous slide |
-| <kbd>down</kbd> | next slide |
-
-<!-- https://sli.dev/guide/animations.html#click-animations -->
-<img
-  v-click
-  class="absolute -bottom-9 -left-7 w-80 opacity-50"
-  src="https://sli.dev/assets/arrow-bottom-left.svg"
-  alt=""
-/>
-<p v-after class="absolute bottom-23 left-45 opacity-30 transform -rotate-10">Here!</p>
-
----
-layout: image-right
-image: https://source.unsplash.com/collection/94734566/1920x1080
----
-
-# Code
-
-Use code snippets and get the highlighting directly![^1]
-
-```ts {all|2|1-6|9|all}
-interface User {
-  id: number
-  firstName: string
-  lastName: string
-  role: string
-}
-
-function updateUser(id: number, update: User) {
-  const user = getUser(id)
-  const newUser = { ...user, ...update }
-  saveUser(id, newUser)
-}
+# 6. Check that the hostname
+# has not changed in the new
+# UTS namespace
+$ hostname
+thor
 ```
 
-<arrow v-click="[3, 4]" x1="400" y1="420" x2="230" y2="330" color="#564" width="3" arrowSize="1" />
-
-[^1]: [Learn More](https://sli.dev/guide/syntax.html#line-highlighting)
-
-<style>
-.footnotes-sep {
-  @apply mt-20 opacity-10;
-}
-.footnotes {
-  @apply text-sm opacity-75;
-}
-.footnote-backref {
-  display: none;
-}
-</style>
-
 ---
 
-# Components
+### Mount Namespace
 
-<div grid="~ cols-2 gap-4">
-<div>
+#### What is a mount point?
 
-You can use Vue components directly inside your slides.
+- A mount point is a directory in the filesystem from which the content of a storage device is made available to the user
+- E.g. when you plug in a USB drive, by default on Ubuntu the content of the USB drive which device file is `/dev/sdb1` is made available to the user in the `/media/$USER/$NAME_OF_THE_USB_DRIVE` directory
+- A mount point source can be a device file, a directory or a remote filesystem
 
-We have provided a few built-in components like `<Tweet/>` and `<Youtube/>` that you can use directly. And adding your custom components is also super easy.
+---
+layout: two-cols
+---
 
-```html
-<Counter :count="10" />
+#### In practice
+
+Here, we're mounting the directory `./test1` to the directory `./test2`. In this case, the source is a directory, thus the mount point is called a bind mount (`--bind` option), i.e. we're binding the directory `./test1` to the directory `./test2`.
+
+This means that the directory `./test2` now points to the directory `./test1`.
+
+After the mount operation, any change made to the directory `./test1` will be visible in the directory `./test2` and vice versa.
+
+::right::
+
+```console
+$ ls -R ./
+./:
+test1  test2
+./test1:
+file1
+./test2:
+
+$ sudo mount --bind ./test1 ./test2
+
+$ ls -R ./
+./:
+test1  test2
+./test1:
+file1
+./test2:
+file1
+
+$ touch ./test2/file2
+
+$ ls -R ./
+./:
+test1  test2
+./test1:
+file1  file2
+./test2:
+file1  file2
 ```
 
-<!-- ./components/Counter.vue -->
-<Counter :count="10" m="t-4" />
+---
 
-Check out [the guides](https://sli.dev/builtin/components.html) for more.
+### Mount Namespace (cont.)
 
-</div>
-<div>
+- Mount namespace allows each container to have its own set of mount points
+- Mount namespace is hierarchical, i.e. a child mount namespace copies the mount points of its parent mount namespace
+- Mount namespace is the only namespace that is shared between the host and the container
 
-```html
-<Tweet id="1390115482657726468" />
+---
+layout: two-cols
+---
+
+#### In practice
+
+```shell
+# 1. List the files in the current directory
+$ ls -R ./
+./:
+test1  test2
+./test1:
+file1
+./test2:
+
+# 3. Create a new mount namespace
+$ sudo unshare -m
+
+# 4. Create the bind mount
+$ mount --bind ./test1 ./test2
+
+# 5. Check that the bind mount
+# has been created
+$ ls -R ./
+./:
+test1  test2
+./test1:
+file1
+./test2:
+file1
 ```
 
-<Tweet id="1390115482657726468" scale="0.65" />
+::right::
 
-</div>
-</div>
+```shell
+# 2. List the files in the current directory
+$ ls -R ./
+./:
+test1  test2
+./test1:
+file1
+./test2:
 
-<!--
-Presenter note with **bold**, *italic*, and ~~striked~~ text.
-
-Also, HTML elements are valid:
-<div class="flex w-full">
-  <span style="flex-grow: 1;">Left content</span>
-  <span>Right content</span>
-</div>
--->
-
-
----
-class: px-20
----
-
-# Themes
-
-Slidev comes with powerful theming support. Themes can provide styles, layouts, components, or even configurations for tools. Switching between themes by just **one edit** in your frontmatter:
-
-<div grid="~ cols-2 gap-2" m="-t-2">
-
-```yaml
----
-theme: default
----
+# 6. Check that the bind mount
+# is not visible in other mount
+# namespaces
+$ ls -R ./
+./:
+test1  test2
+./test1:
+file1
+./test2:
 ```
 
-```yaml
 ---
-theme: seriph
+
+### PID Namespace
+
+- PID stands for Process IDentifier
+- PID namespace allows each a group of processes to have its own set of PIDs
+- Two process can have the same PID in different PID namespaces, however they are not the same process
+- The first process in a new PID namespace becomes PID 1 (*init* process)
+- PID namespaces are hierarchical, thus they can be seen as parent-child relationships
+- A process inside the parent PID namespace can see the processes in the child PID namespace **but not vice versa**
+
 ---
+
+### PID Namespace (cont.)
+
+![PID Namespaces](images/pid_namespaces.svg)
+
+*Schema from [this conference by Michael Kerrisk](https://youtu.be/0kJPa-1FuoI)*
+
+---
+layout: two-cols-header
+---
+
+#### In practice
+
+::left::
+
+First, we create a new PID namespace with the `--fork` option. This means that the new PID namespace will be a child of the current PID namespace.
+
+Since we cannot change the PID namespace of a running process, we need to create a new process in the new PID namespace. This is done with the `--fork` option.
+
+We can see that the PID of the new process is 1, which means that it is the *init* process of the new PID namespace.
+
+However, because of the `/proc` filesystem, the new process can see the processes in the parent PID namespace. We can see that using the `ps` command.
+
+::right::
+
+```shell
+$ unshare --pid --fork
+$ echo $$
+1
+$ ps
+    PID TTY          TIME CMD
+  18165 pts/2    00:00:00 sudo
+  18166 pts/2    00:00:00 unshare
+  18167 pts/2    00:00:00 bash
+  18280 pts/2    00:00:00 ps
 ```
 
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-default/01.png?raw=true" alt="">
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-seriph/01.png?raw=true" alt="">
-
-</div>
-
-Read more about [How to use a theme](https://sli.dev/themes/use.html) and
-check out the [Awesome Themes Gallery](https://sli.dev/themes/gallery.html).
-
----
-preload: false
 ---
 
-# Animations
+### PID Namespace (cont.)
 
-Animations are powered by [@vueuse/motion](https://motion.vueuse.org/).
+What should we do if we want to isolate the new process from the parent PID namespace?
 
-```html
-<div
-  v-motion
-  :initial="{ x: -80 }"
-  :enter="{ x: 0 }">
-  Slidev
-</div>
+---
+layout: two-cols-header
+---
+
+#### More complete example
+
+::left::
+
+We create both a new PID namespace and a new mount namespace. We then create a new process in the new PID namespace and we mount the `/proc` filesystem in the new mount namespace.
+
+We can see that the new process is the *init* process of the new PID namespace and that it can only see the processes in its new PID namespace.
+
+::right::
+
+```shell
+$ unshare --pid --fork --mount
+$ mount -t proc proc /proc
+$ ps
+    PID TTY          TIME CMD
+      1 pts/2    00:00:00 bash
+     14 pts/2    00:00:00 ps
 ```
 
-<div class="w-60 relative mt-6">
-  <div class="relative w-40 h-40">
-    <img
-      v-motion
-      :initial="{ x: 800, y: -100, scale: 1.5, rotate: -50 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-square.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ y: 500, x: -100, scale: 2 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-circle.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ x: 600, y: 400, scale: 2, rotate: 100 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-triangle.png"
-      alt=""
-    />
-  </div>
+---
 
-  <div
-    class="text-5xl absolute top-14 left-40 text-[#2B90B6] -z-1"
-    v-motion
-    :initial="{ x: -80, opacity: 0}"
-    :enter="{ x: 0, opacity: 1, transition: { delay: 2000, duration: 1000 } }">
-    Slidev
-  </div>
-</div>
 
-<!-- vue script setup scripts can be directly used in markdown, and will only affects current page -->
-<script setup lang="ts">
-const final = {
-  x: 0,
-  y: 0,
-  rotate: 0,
-  scale: 1,
-  transition: {
-    type: 'spring',
-    damping: 10,
-    stiffness: 20,
-    mass: 2
-  }
-}
-</script>
+### Network Namespace
 
-<div
-  v-motion
-  :initial="{ x:35, y: 40, opacity: 0}"
-  :enter="{ y: 0, opacity: 1, transition: { delay: 3500 } }">
-
-[Learn More](https://sli.dev/guide/animations.html#motion)
-
-</div>
+- Network namespace allows each container to have its own network stack (network interfaces, routing tables, iptables rules, etc.)
+- One network interface can only be in one network namespace at a time
+- We can use virtual network device pair to provide connectivity between network namespaces
+- When a namespace is freed, a physical device is moved back to the initial network namespace while a virtual device is destroyed
 
 ---
 
-# LaTeX
+#### Virtual Network Device Pair
 
-LaTeX is supported out-of-box powered by [KaTeX](https://katex.org/).
-
-<br>
-
-Inline $\sqrt{3x-1}+(1+x)^2$
-
-Block
-$$ {1|3|all}
-\begin{array}{c}
-
-\nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} &
-= \frac{4\pi}{c}\vec{\mathbf{j}}    \nabla \cdot \vec{\mathbf{E}} & = 4 \pi \rho \\
-
-\nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} & = \vec{\mathbf{0}} \\
-
-\nabla \cdot \vec{\mathbf{B}} & = 0
-
-\end{array}
-$$
-
-<br>
-
-[Learn more](https://sli.dev/guide/syntax#latex)
+![Virtual Network Device Pair](images/virtual_network_device_pair.svg)
 
 ---
 
-# Diagrams
+#### In practice
 
-You can create diagrams / graphs from textual descriptions, directly in your Markdown.
-
-<div class="grid grid-cols-4 gap-5 pt-4 -mb-6">
-
-```mermaid {scale: 0.5, alt: 'A simple sequence diagram'}
-sequenceDiagram
-    Alice->John: Hello John, how are you?
-    Note over Alice,John: A typical interaction
+```shell
+$ ip netns add loki
+$ ip link add eth0-l type veth peer name veth-l
+$ ip link set eth0-l netns loki
+$ ip link set veth-l up
+$ ip address add 10.0.0.1/24 dev veth-l
+$ ip netns exec loki ip link set lo up
+$ ip netns exec loki ip link set eth0-l up
+$ ip netns exec loki ip address add 10.0.0.2/24 dev eth0-l
 ```
 
-```mermaid {theme: 'neutral', scale: 0.8}
-graph TD
-B[Text] --> C{Decision}
-C -->|One| D[Result 1]
-C -->|Two| E[Result 2]
-```
-
-```mermaid
-mindmap
-  root((mindmap))
-    Origins
-      Long history
-      ::icon(fa fa-book)
-      Popularisation
-        British popular psychology author Tony Buzan
-    Research
-      On effectivness<br/>and features
-      On Automatic creation
-        Uses
-            Creative techniques
-            Strategic planning
-            Argument mapping
-    Tools
-      Pen and paper
-      Mermaid
-```
-
-```plantuml {scale: 0.7}
-@startuml
-
-package "Some Group" {
-  HTTP - [First Component]
-  [Another Component]
-}
-
-node "Other Groups" {
-  FTP - [Second Component]
-  [First Component] --> FTP
-}
-
-cloud {
-  [Example 1]
-}
-
-
-database "MySql" {
-  folder "This is my folder" {
-    [Folder 3]
-  }
-  frame "Foo" {
-    [Frame 4]
-  }
-}
-
-
-[Another Component] --> [Example 1]
-[Example 1] --> [Folder 3]
-[Folder 3] --> [Frame 4]
-
-@enduml
-```
-
-</div>
-
-[Learn More](https://sli.dev/guide/syntax.html#diagrams)
-
----
-src: ./pages/multiple-entries.md
-hide: false
 ---
 
----
-layout: center
-class: text-center
+## User Namespace
+
+- Isolate identifiers (user and group IDs) and capabilities
+- UID and GID can be mapped to other UID and GID inside the namespace
+- Process can have unprivileged UID and GID outside the namespace and privileged UID and GID inside the namespace
+- The process that creates the new namespace gains all capabilities inside the namespace
+
 ---
 
-# Learn More
+### Hierarchy
 
-[Documentations](https://sli.dev) · [GitHub](https://github.com/slidevjs/slidev) · [Showcases](https://sli.dev/showcases.html)
+- User namespaces have a hierarchical relationship
+  - each user namespace has a parent user namespace, except for the initial user namespace
+- User namespaces can have multiple children user namespaces
+- A maximum of 32 user namespaces can be nested
+- A process is a member of exactly one user namespace
+
+---
+
+## User Namespace (cont.)
+
+- A user namespace can own other namespaces (mount, PID, network, etc.)
+- Capabilities only apply to the resources that are member of the namespace owned by the current user namespace
+- E.g. a process having the `CAP_NET_ADMIN` capability can only modify network interface that are member of the namespace owned by the current user namespace
+
+---
+
+![User Namespaces](images/user_namespaces.svg)
+
+*Schema from [this conference by Michael Kerrisk](https://youtu.be/0kJPa-1FuoI)*
