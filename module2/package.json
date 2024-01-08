@@ -1,5 +1,5 @@
 {
-  "name": "slides",
+  "name": "module2",
   "private": true,
   "scripts": {
     "build": "slidev build",
