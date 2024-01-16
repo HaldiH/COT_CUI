@@ -134,9 +134,10 @@ Script that contains instructions to build an image.
 
 - `FROM`: base image
 - `ADD`/`COPY`: add files to the image
-- `RUN`: run commands
-- `CMD`: default command to run when the container starts
-- `ENTRYPOINT`: default command to run when the container starts, but cannot be overridden
+- `WORKDIR`: set the working directory for subsequent instructions
+- `RUN`: run commands when building the image
+- `ENTRYPOINT`: default command to run when the container starts, but cannot be overridden. Only one `ENTRYPOINT` instruction can be used in a Dockerfile.
+- `CMD`: default command to run when the container starts. Only one `CMD` instruction can be used in a Dockerfile.
 - `EXPOSE`: expose ports
 
 The `RUN` commands are executed when the image is built, while the `CMD`/`ENTRYPOINT` commands are executed when the container is started.
@@ -144,6 +145,22 @@ The `RUN` commands are executed when the image is built, while the `CMD`/`ENTRYP
 Read more: [Dockerfile reference](https://docs.docker.com/engine/reference/builder/)
 
 ---
+
+##### Entrypoint vs CMD
+
+- `ENTRYPOINT` defines the executable to run when the container starts.
+- `CMD` defines the default arguments for the executable defined by `ENTRYPOINT`.
+
+```dockerfile
+ENTRYPOINT ["bash", "-c"]
+CMD ["echo", "Hello World"]
+```
+
+Now by defalut, the container will run `bash -c echo "Hello World"`. We can override the default command by passing arguments to the `docker run` command.
+
+```bash
+docker run <image_tag:version> echo "Bonjour le monde"
+```
 
 #### Building an image
 
